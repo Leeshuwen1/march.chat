@@ -29,8 +29,15 @@ public class ClientHandler {
             try {
                 System.out.println("Подключился новый клиент");
                 while (true) {
-                    String messege = inputStream.readUTF();
-                    server.broadcastMessage(userName + ": " + messege);
+                    String message = inputStream.readUTF();
+                    if(message.startsWith("/")){
+                        if(message.startsWith("/exit")){
+                            disconect();
+                            break;
+                        }
+                        continue;
+                    }
+                    server.broadcastMessage(userName + ": " + message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

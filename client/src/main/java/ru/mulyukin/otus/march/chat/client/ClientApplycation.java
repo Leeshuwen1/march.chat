@@ -29,8 +29,11 @@ public class ClientApplycation {
 
             }).start();
             while (true) {
-                String messege = scanner.nextLine();
-                outputStream.writeUTF(messege);
+                String message = scanner.nextLine();
+                outputStream.writeUTF(message);
+                if(message.startsWith("/exit")){
+                    break;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
