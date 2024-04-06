@@ -14,8 +14,8 @@ public class ClientHandler {
 
     private static int userCounter = 0;
 
-    private void generateUsername(){
-        userCounter ++;
+    private void generateUsername() {
+        userCounter++;
         this.userName = "user" + userCounter;
     }
 
@@ -30,51 +30,62 @@ public class ClientHandler {
                 System.out.println("Подключился новый клиент");
                 while (true) {
                     String message = inputStream.readUTF();
-                    if(message.startsWith("/")){
-                        if(message.startsWith("/exit")){
+                    if (message.startsWith("/")) {
+                        if (message.startsWith("/exit")) {
                             disconect();
                             break;
                         }
                         continue;
                     }
-                    server.broadcastMessage(userName + ": " + message);
+                    if (message.startsWith("/w user1")) {
+                        server.broadcastMessage(userName + ": " + message);
+                    } else if (message.startsWith("/w user2 ")) {
+                        server.broadcastMessage(userName + ": " + message);
+                    } else if (message.startsWith("/w user3 ")) {
+                        server.broadcastMessage(userName + ": " + message);
+                    } else {
+                        server.broadcastMessage(userName + ": " + message);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 disconect();
             }
         }).start();
     }
-    public void sendMessage(String messege){
+
+    public void sendMessage(String messege) {
         try {
             outputStream.writeUTF(messege);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void disconect(){
+
+    public void disconect() {
         server.unSubscribe(this);
         try {
             if (inputStream != null) {
                 inputStream.close();
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         try {
             if (outputStream != null) {
                 outputStream.close();
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         try {
             if (socket != null && socket.isClosed()) {
                 socket.close();
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

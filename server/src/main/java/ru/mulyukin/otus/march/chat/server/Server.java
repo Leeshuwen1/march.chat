@@ -38,7 +38,11 @@ public class Server {
 
     public synchronized void broadcastMessage(String message) {
         for (ClientHandler elem : clients) {
-            elem.sendMessage(message);
+//            if (clients.equals(message)) {
+//                elem.sendMessage(message);
+//            } else{
+                elem.sendMessage(message);
+            }
         }
-    }
+
 }
