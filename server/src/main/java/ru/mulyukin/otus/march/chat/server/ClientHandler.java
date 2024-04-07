@@ -37,16 +37,9 @@ public class ClientHandler {
                         }
                         continue;
                     }
-                    if (message.startsWith("/w user1")) {
-                        server.broadcastMessage(userName + ": " + message);
-                    } else if (message.startsWith("/w user2 ")) {
-                        server.broadcastMessage(userName + ": " + message);
-                    } else if (message.startsWith("/w user3 ")) {
-                        server.broadcastMessage(userName + ": " + message);
-                    } else {
-                        server.broadcastMessage(userName + ": " + message);
+                    server.broadcastMessage(userName + ": " + message);
                     }
-                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -87,5 +80,4 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
-
 }

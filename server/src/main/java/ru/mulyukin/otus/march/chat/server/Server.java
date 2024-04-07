@@ -4,8 +4,7 @@ package ru.mulyukin.otus.march.chat.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Server {
     private int port;
@@ -13,7 +12,7 @@ public class Server {
 
     public Server(int port) {
         this.port = port;
-        this.clients = new ArrayList<>();
+        this.clients = new LinkedList<>();
     }
 
     public void start() {
@@ -38,11 +37,18 @@ public class Server {
 
     public synchronized void broadcastMessage(String message) {
         for (ClientHandler elem : clients) {
-//            if (clients.equals(message)) {
-//                elem.sendMessage(message);
-//            } else{
-                elem.sendMessage(message);
+            elem.sendMessage(message);
+        }
+    }
+    public synchronized void sendDirectMessage(String userName){
+        for(ClientHandler elem: clients ){
+            if(userName.equals("user1")){
+                elem.sendMessage(userName);
+            } else if (userName.equals("user2")) {
+                elem.sendMessage(userName);
+            }else if (userName.equals("user3")){
+                elem.sendMessage(userName);
             }
         }
-
+    }
 }
