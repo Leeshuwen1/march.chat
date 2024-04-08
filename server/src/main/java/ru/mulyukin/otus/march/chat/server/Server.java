@@ -40,10 +40,10 @@ public class Server {
             elem.sendMessage(message);
         }
     }
-    public synchronized void sendDirectMessage(String userName){
+    public synchronized void sendDirectMessage(String userName, String message){
         for(ClientHandler elem: clients ){
             if(elem.getUserName().equals(userName)) {
-                elem.sendMessage(userName);
+                elem.sendMessage(message);
             }
         }
     }
