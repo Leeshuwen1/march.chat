@@ -42,8 +42,9 @@ public class Server {
     }
     public synchronized void sendDirectMessage(String userName){
         for(ClientHandler elem: clients ){
-            elem.getUserName().equals(userName);
-            elem.sendMessage(userName);
+            if(elem.getUserName().equals(userName)) {
+                elem.sendMessage(userName);
+            }
         }
     }
 }
