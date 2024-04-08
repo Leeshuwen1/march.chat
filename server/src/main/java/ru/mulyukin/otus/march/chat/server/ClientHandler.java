@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class ClientHandler {
     private Server server;
@@ -25,6 +26,7 @@ public class ClientHandler {
         this.inputStream = new DataInputStream(socket.getInputStream());
         this.outputStream = new DataOutputStream(socket.getOutputStream());
         this.generateUsername();
+        Scanner scanner = new Scanner(System.in);
         new Thread(() -> {
             try {
                 System.out.println("Подключился новый клиент");
@@ -38,7 +40,7 @@ public class ClientHandler {
                         continue;
                     }
                     if (message.startsWith("/w ")) {
-                        server.sendDirectMessage(userName + ": " + message);
+                        server.sendDirectMessage(userName);
                     } else {
                         server.broadcastMessage(userName + ": " + message);
                     }
