@@ -37,8 +37,12 @@ public class ClientHandler {
                         }
                         continue;
                     }
-                    server.broadcastMessage(userName + ": " + message);
+                    if (message.startsWith("/w ")) {
+                        server.sendDirectMessage(userName + ": " + message);
+                    } else {
+                        server.broadcastMessage(userName + ": " + message);
                     }
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -79,5 +83,9 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }
