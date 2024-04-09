@@ -26,7 +26,6 @@ public class ClientHandler {
         this.inputStream = new DataInputStream(socket.getInputStream());
         this.outputStream = new DataOutputStream(socket.getOutputStream());
         this.generateUsername();
-        Scanner scanner = new Scanner(System.in);
         new Thread(() -> {
             try {
                 System.out.println("Подключился новый клиент");
@@ -39,10 +38,11 @@ public class ClientHandler {
                         }
                         continue;
                     }
-                    if (message.startsWith("/w ")) {
-                        String[] elems = message.split(" ", 4);
-
-                        server.sendDirectMessage(elems[1], message);
+                    if (message.startsWith("/w")) {
+                        String[] elems = message.split(" ", 2);
+                        for (int i = 0; i < elems.length; i++) {
+                            server.sendDirectMessage(elems[1], message);
+                        }
                     } else {
                         server.broadcastMessage(userName + ": " + message);
                     }
