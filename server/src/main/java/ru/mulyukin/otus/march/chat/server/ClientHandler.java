@@ -4,6 +4,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class ClientHandler {
     private Server server;
@@ -35,10 +37,16 @@ public class ClientHandler {
                             disconect();
                             break;
                         }
+                        if (message.startsWith("/w")) {
+                            String[] elems = message.split(" ", 3);
+                            server.sendDirectMessage(elems[1], elems[2]);
+                        }
                         continue;
                     }
-                    server.broadcastMessage(userName + ": " + message);
-                    }
+                        server.broadcastMessage(userName + ": " + message);
+
+
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -79,5 +87,9 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }
