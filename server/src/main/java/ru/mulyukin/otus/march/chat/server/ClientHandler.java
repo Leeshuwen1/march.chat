@@ -37,15 +37,16 @@ public class ClientHandler {
                             disconect();
                             break;
                         }
-                        continue;
-                    }
                         if (message.startsWith("/w")) {
                             String[] elems = message.split(" ", 3);
-                                server.sendDirectMessage( elems[1], elems[2]);
-                        } else {
-                            server.broadcastMessage(userName + ": " + message);
+                            server.sendDirectMessage(elems[1], elems[2]);
                         }
+                        continue;
                     }
+                        server.broadcastMessage(userName + ": " + message);
+
+
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
