@@ -47,4 +47,17 @@ public class Server {
             }
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Server server = (Server) o;
+        return port == server.port && Objects.equals(clients, server.clients);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(port, clients);
+    }
 }

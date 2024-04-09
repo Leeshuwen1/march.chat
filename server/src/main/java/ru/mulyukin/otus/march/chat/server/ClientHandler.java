@@ -40,10 +40,8 @@ public class ClientHandler {
                         continue;
                     }
                         if (message.startsWith("/w")) {
-                            String[] elems = message.split(" ", 1);
-                            for (String elem: elems) {
-                                server.sendDirectMessage(String.valueOf(elem.equals(getUserName())), "message " + message);
-                            }
+                            String[] elems = message.split(" ", 3);
+                                server.sendDirectMessage( elems[1], elems[2]);
                         } else {
                             server.broadcastMessage(userName + ": " + message);
                         }
