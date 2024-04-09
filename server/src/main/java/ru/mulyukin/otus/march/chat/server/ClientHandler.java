@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class ClientHandler {
@@ -38,15 +39,15 @@ public class ClientHandler {
                         }
                         continue;
                     }
-                    if (message.startsWith("/w")) {
-                        String[] elems = message.split(" ", 2);
-                        for (int i = 0; i < elems.length; i++) {
-                            server.sendDirectMessage(elems[1], message);
+                        if (message.startsWith("/w")) {
+                            String[] elems = message.split(" ", 1);
+                            for (String elem: elems) {
+                                server.sendDirectMessage(String.valueOf(elem.equals(getUserName())), "message " + message);
+                            }
+                        } else {
+                            server.broadcastMessage(userName + ": " + message);
                         }
-                    } else {
-                        server.broadcastMessage(userName + ": " + message);
                     }
-                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -91,5 +92,29 @@ public class ClientHandler {
 
     public String getUserName() {
         return userName;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientHandler{" +
+                "server=" + server +
+                ", socket=" + socket +
+                ", inputStream=" + inputStream +
+                ", outputStream=" + outputStream +
+                ", userName='" + userName + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClientHandler that = (ClientHandler) o;
+        return Objects.equals(server, that.server) && Objects.equals(socket, that.socket) && Objects.equals(inputStream, that.inputStream) && Objects.equals(outputStream, that.outputStream) && Objects.equals(userName, that.userName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(server, socket, inputStream, outputStream, userName);
     }
 }
