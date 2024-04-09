@@ -91,28 +91,4 @@ public class ClientHandler {
     public String getUserName() {
         return userName;
     }
-
-    @Override
-    public String toString() {
-        return "ClientHandler{" +
-                "server=" + server +
-                ", socket=" + socket +
-                ", inputStream=" + inputStream +
-                ", outputStream=" + outputStream +
-                ", userName='" + userName + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ClientHandler that = (ClientHandler) o;
-        return Objects.equals(server, that.server) && Objects.equals(socket, that.socket) && Objects.equals(inputStream, that.inputStream) && Objects.equals(outputStream, that.outputStream) && Objects.equals(userName, that.userName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(server, socket, inputStream, outputStream, userName);
-    }
 }
