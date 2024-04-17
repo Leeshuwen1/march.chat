@@ -71,6 +71,13 @@ public class Server {
             }
         }
     }
+    void kick(String role){
+        for (ClientHandler elem : clients) {
+            if (elem.getNickName().equals(role)) {
+                elem.sendMessage(role);
+            }
+        }
+    }
 }
 
 

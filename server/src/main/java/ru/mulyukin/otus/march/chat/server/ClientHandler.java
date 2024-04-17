@@ -11,17 +11,21 @@ public class ClientHandler {
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     private String nickName;
+    private String admin;
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
         this.socket = socket;
         this.inputStream = new DataInputStream(socket.getInputStream());
         this.outputStream = new DataOutputStream(socket.getOutputStream());
+        this.admin = admin;
         new Thread(() -> {
             try {
                 System.out.println("Подключился новый клиент");
                 if (tryToAuthenticate()) {
                     communicate();
+                }
+                if(adminKick()){
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -45,6 +49,17 @@ public class ClientHandler {
                 continue;
             }
             server.broadcastMessage(nickName + ": " + message);
+        }
+    }
+
+    private boolean adminKick() throws IOException {
+        while (true){
+            String message = inputStream.readUTF();
+            if(message.startsWith("/kick ")){
+                String[] elems = message.split(" ", 1);
+                server.kick(elems[1] + "Вас кикнули!!)");
+                disconect();
+            }
         }
     }
 
@@ -79,13 +94,14 @@ public class ClientHandler {
             } else if (message.startsWith("/register ")) {
                 // /register login pass nickname
                 String[] token = message.split(" ");
-                if (token.length != 4) {
+                if (token.length != 5) {
                     sendMessage("Некорректный формат запроса");
                     continue;
                 }
                 String login = token[1];
                 String password = token[2];
                 String nickName = token[3];
+                String role = token[4];
                 if (server.getAuthorizationService().isLoginAlreadyExsist(login)) {
                     sendMessage("Указанный логин занят");
                     continue;
@@ -94,7 +110,11 @@ public class ClientHandler {
                     sendMessage("Указанный никнэйм занят");
                     continue;
                 }
-                if (!server.getAuthorizationService().register(login,password,nickName)){
+                if(server.getAuthorizationService().isAdminAlreadyExsist(role)){
+                    sendMessage("Указанная роль занята");
+                    continue;
+                }
+                if (!server.getAuthorizationService().register(login,password,nickName,role)){
                     sendMessage("Не удалось пройти регистрацию");
                     continue;
                 }
