@@ -4,56 +4,111 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Objects;
-import java.util.Scanner;
 
 public class ClientHandler {
     private Server server;
     private Socket socket;
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
-    private String userName;
-
-    private static int userCounter = 0;
-
-    private void generateUsername() {
-        userCounter++;
-        this.userName = "user" + userCounter;
-    }
+    private String nickName;
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
         this.socket = socket;
         this.inputStream = new DataInputStream(socket.getInputStream());
         this.outputStream = new DataOutputStream(socket.getOutputStream());
-        this.generateUsername();
         new Thread(() -> {
             try {
                 System.out.println("Подключился новый клиент");
-                while (true) {
-                    String message = inputStream.readUTF();
-                    if (message.startsWith("/")) {
-                        if (message.startsWith("/exit")) {
-                            disconect();
-                            break;
-                        }
-                        if (message.startsWith("/w")) {
-                            String[] elems = message.split(" ", 3);
-                            server.sendDirectMessage(elems[1], elems[2]);
-                        }
-                        continue;
-                    }
-                        server.broadcastMessage(userName + ": " + message);
-
-
+                if (tryToAuthenticate()) {
+                    communicate();
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 disconect();
             }
         }).start();
+    }
+
+    private void communicate() throws IOException {
+        while (true) {
+            String message = inputStream.readUTF();
+            if (message.startsWith("/")) {
+                if (message.startsWith("/exit")) {
+                    break;
+                }
+                if (message.startsWith("/w")) {
+                    String[] elems = message.split(" ", 3);
+                    server.sendDirectMessage(elems[1], elems[2]);
+                }
+                continue;
+            }
+            server.broadcastMessage(nickName + ": " + message);
+        }
+    }
+
+    private boolean tryToAuthenticate() throws IOException {
+        while (true) {
+            // /auth login1 pass1
+            String message = inputStream.readUTF();
+            if (message.startsWith("/auth ")) {
+                String[] token = message.split(" ");
+                if (token.length != 3) {
+                    sendMessage("Некорректный формат запроса");
+                    continue;
+                }
+                String login = token[1];
+                String password = token[2];
+
+                String nickName = server.getAuthorizationService().getNickNameByLoginAndPassword(login, password);
+                if (nickName == null) {
+                    sendMessage("Неправильный логин/пароль");
+                    continue;
+                }
+                if (server.isNickNameBusy(nickName)) {
+                    sendMessage("Указанная учетная запись занята. Попробуйте зайти позднее");
+                    continue;
+                }
+
+                this.nickName = nickName;
+                server.subscribe(this);
+                sendMessage(nickName + ", добро пожаловать в чат!");
+                return true;
+
+            } else if (message.startsWith("/register ")) {
+                // /register login pass nickname
+                String[] token = message.split(" ");
+                if (token.length != 4) {
+                    sendMessage("Некорректный формат запроса");
+                    continue;
+                }
+                String login = token[1];
+                String password = token[2];
+                String nickName = token[3];
+                if (server.getAuthorizationService().isLoginAlreadyExsist(login)) {
+                    sendMessage("Указанный логин занят");
+                    continue;
+                }
+                if (server.getAuthorizationService().isNickNameAlreadyExsist(nickName)) {
+                    sendMessage("Указанный никнэйм занят");
+                    continue;
+                }
+                if (!server.getAuthorizationService().register(login,password,nickName)){
+                    sendMessage("Не удалось пройти регистрацию");
+                    continue;
+                }
+                this.nickName = nickName;
+                server.subscribe(this);
+                sendMessage("Вы успешно зарегистрировались " + nickName + ", добро пожаловать в чат!");
+                return true;
+
+            } else if (message.equals("/exit")) {
+                return false;
+            } else {
+                sendMessage("Вам необходимо авторизоваться");
+            }
+        }
     }
 
     public void sendMessage(String messege) {
@@ -89,7 +144,7 @@ public class ClientHandler {
         }
     }
 
-    public String getUserName() {
-        return userName;
+    public String getNickName() {
+        return nickName;
     }
 }
