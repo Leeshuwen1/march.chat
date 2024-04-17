@@ -8,11 +8,13 @@ public class InMemoryAuthorizationService implements AuthorizationService{
         private String login;
         private String password;
         private String nickName;
+        private String role;
 
-        public User(String login, String password, String nickName) {
+        public User(String login, String password, String nickName, String role) {
             this.login = login;
             this.password = password;
             this.nickName = nickName;
+            this.role = role;
         }
     }
 private List<User> users;
@@ -20,7 +22,7 @@ private List<User> users;
     public InMemoryAuthorizationService() {
         this.users = new ArrayList<>();
         for (int i = 1; i <=10  ; i++) {
-            this.users.add(new User("login" + i, "pass" + i, "nick" + i));
+            this.users.add(new User("login" + i, "pass" + i, "nick" + i, "role" + i));
         }
     }
 
@@ -36,13 +38,18 @@ private List<User> users;
 
     @Override
     public boolean register(String login, String password, String nickname) {
+        return false;
+    }
+
+    @Override
+    public boolean register(String login, String password, String nickname, String role) {
         if(isLoginAlreadyExsist(login)){
             return false;
         }
         if (isNickNameAlreadyExsist(nickname)){
             return false;
         }
-        users.add(new User(login, password, nickname));
+        users.add(new User(login, password, nickname, role));
         return true;
     }
 
@@ -59,7 +66,17 @@ private List<User> users;
     @Override
     public boolean isNickNameAlreadyExsist(String nickName) {
         for(User u: users){
-            if(u.login.equals(nickName) ){
+            if(u.nickName.equals(nickName) ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isAdminAlreadyExsist(String role) {
+        for(User u: users){
+            if(u.role.equals(role) ){
                 return true;
             }
         }
