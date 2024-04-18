@@ -11,14 +11,13 @@ public class ClientHandler {
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     private String nickName;
-    private String admin;
+    private String role;
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
         this.socket = socket;
         this.inputStream = new DataInputStream(socket.getInputStream());
         this.outputStream = new DataOutputStream(socket.getOutputStream());
-        this.admin = admin;
         new Thread(() -> {
             try {
                 System.out.println("Подключился новый клиент");
@@ -166,5 +165,9 @@ public class ClientHandler {
 
     public String getNickName() {
         return nickName;
+    }
+
+    public String getRole() {
+        return role;
     }
 }
