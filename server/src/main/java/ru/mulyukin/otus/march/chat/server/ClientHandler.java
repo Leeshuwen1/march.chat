@@ -11,7 +11,7 @@ public class ClientHandler {
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     private String nickName;
-    private String role;
+    private String admin;
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
@@ -24,12 +24,10 @@ public class ClientHandler {
                 if (tryToAuthenticate()) {
                     communicate();
                 }
-                if(adminKick()){
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                disconect();
+                disconect(nickName);
             }
         }).start();
     }
@@ -45,22 +43,16 @@ public class ClientHandler {
                     String[] elems = message.split(" ", 3);
                     server.sendDirectMessage(elems[1], elems[2]);
                 }
+                if(message.startsWith("/kick ")){
+                    String[] elems = message.split(" ", 2);
+                    server.kick(elems[1]);
+                }
                 continue;
             }
             server.broadcastMessage(nickName + ": " + message);
         }
     }
 
-    private boolean adminKick() throws IOException {
-        while (true){
-            String message = inputStream.readUTF();
-            if(message.startsWith("/kick ")){
-                String[] elems = message.split(" ", 1);
-                server.kick(elems[1] + "Вас кикнули!!)");
-                disconect();
-            }
-        }
-    }
 
     private boolean tryToAuthenticate() throws IOException {
         while (true) {
@@ -138,7 +130,7 @@ public class ClientHandler {
         }
     }
 
-    public void disconect() {
+    public void disconect(String nickName) {
         server.unSubscribe(this);
         try {
             if (inputStream != null) {
@@ -167,7 +159,4 @@ public class ClientHandler {
         return nickName;
     }
 
-    public String getRole() {
-        return role;
-    }
 }
