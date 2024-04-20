@@ -44,7 +44,7 @@ public class ClientHandler {
                     server.sendDirectMessage(elems[1], elems[2]);
                 }
                 if(message.startsWith("/kick ")){
-                    String[] elems = message.split(" ", 2);
+                    String[] elems = message.split(" ", 1);
                     server.kick(elems[1]);
                 }
                 continue;

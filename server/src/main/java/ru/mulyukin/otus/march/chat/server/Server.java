@@ -10,7 +10,6 @@ public class Server {
     private int port;
     private List<ClientHandler> clients;
     private AuthorizationService authorizationService;
-    private ClientHandler clientHandler;
 
 
     public AuthorizationService getAuthorizationService() {
@@ -76,7 +75,7 @@ public class Server {
     public void kick(String nickName) {
         for (ClientHandler elem : clients) {
             if (elem.getNickName().equals(nickName)) {
-                clientHandler.disconect(nickName);
+                elem.disconect(nickName);
             }
         }
     }
