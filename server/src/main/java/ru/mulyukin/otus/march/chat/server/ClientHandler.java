@@ -154,7 +154,7 @@ public class ClientHandler {
             e.printStackTrace();
         }
         try{
-            if(admin.startsWith(nickName)){
+            if(sendMessage(admin)){
                 socket.close();
             }
         }catch (IOException e){
