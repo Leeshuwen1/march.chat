@@ -153,13 +153,7 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try{
-            if(sendMessage(admin)){
-                socket.close();
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+
     }
 
     public String getNickName() {
