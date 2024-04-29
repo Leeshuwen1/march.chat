@@ -11,7 +11,7 @@ public class ClientHandler {
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     private String nickName;
-    private String admin;
+
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
@@ -26,8 +26,6 @@ public class ClientHandler {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
-                //disconect(nickName);
             }
         }).start();
     }
@@ -43,7 +41,7 @@ public class ClientHandler {
                     String[] elems = message.split(" ", 3);
                     server.sendDirectMessage(elems[1], elems[2]);
                 }
-                if(message.startsWith("/kick ")){
+                if (message.startsWith("/kick ")) {
                     String[] elems = message.split(" ");
                     server.kick(elems[1]);
                 }
@@ -101,11 +99,11 @@ public class ClientHandler {
                     sendMessage("Указанный никнэйм занят");
                     continue;
                 }
-                if(server.getAuthorizationService().isAdminAlreadyExsist(role)){
+                if (server.getAuthorizationService().isAdminAlreadyExsist(role)) {
                     sendMessage("Указанная роль занята");
                     continue;
                 }
-                if (!server.getAuthorizationService().register(login,password,nickName,role)){
+                if (!server.getAuthorizationService().register(login, password, nickName, role)) {
                     sendMessage("Не удалось пройти регистрацию");
                     continue;
                 }
@@ -161,7 +159,4 @@ public class ClientHandler {
         return nickName;
     }
 
-    public String getAdmin() {
-        return admin;
-    }
 }
