@@ -72,10 +72,10 @@ public class Server {
         }
     }
 
-    public void kick(String nickName) {
+    public void kick(String nickname) {
         for (ClientHandler elem : clients) {
-            if (elem.getNickName().equals(nickName)) {
-                elem.disconect(nickName);
+            if (elem.getNickName().equals(nickname)) {
+                elem.sendMessage(elem.disconect(nickname));
             }
         }
     }

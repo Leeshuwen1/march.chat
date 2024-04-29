@@ -130,7 +130,7 @@ public class ClientHandler {
         }
     }
 
-    public void disconect(String nickName) {
+    public String disconect(String nickName) {
         server.unSubscribe(this);
         try {
             if (inputStream != null) {
@@ -154,10 +154,14 @@ public class ClientHandler {
             e.printStackTrace();
         }
 
+        return nickName;
     }
 
     public String getNickName() {
         return nickName;
     }
 
+    public String getAdmin() {
+        return admin;
+    }
 }
