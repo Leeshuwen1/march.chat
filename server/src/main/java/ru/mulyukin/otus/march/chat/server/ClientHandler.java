@@ -27,7 +27,7 @@ public class ClientHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                disconect(nickName);
+                //disconect(nickName);
             }
         }).start();
     }
@@ -44,7 +44,7 @@ public class ClientHandler {
                     server.sendDirectMessage(elems[1], elems[2]);
                 }
                 if(message.startsWith("/kick ")){
-                    String[] elems = message.split(" ", 1);
+                    String[] elems = message.split(" ");
                     server.kick(elems[1]);
                 }
                 continue;
