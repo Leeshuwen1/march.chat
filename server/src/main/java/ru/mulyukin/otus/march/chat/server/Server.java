@@ -72,10 +72,10 @@ public class Server {
         }
     }
 
-    public void kick(String role) {
+    public void kick(String nickname) {
         for (ClientHandler elem : clients) {
-            if (elem.getRole().equals(role)) {
-                unSubscribe(elem);
+            if (elem.getNickName().equals(nickname)) {
+                elem.sendMessage(elem.disconect(nickname));
             }
         }
     }
