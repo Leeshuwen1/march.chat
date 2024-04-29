@@ -75,7 +75,7 @@ public class Server {
     public void kick(String nickname) {
         for (ClientHandler elem : clients) {
             if (elem.getNickName().equals(nickname)) {
-                elem.sendMessage(elem.disconect(nickname));
+                elem.disconect(nickname);
             }
         }
     }
